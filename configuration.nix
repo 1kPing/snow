@@ -10,9 +10,16 @@
       ./hardware-configuration.nix
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+#  boot.loader.systemd-boot.enable = true;
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    grub = {
+      enable = true;
+      devices = [ "nodev" ];
+      efiSupport = true;
+      useOSProber = true;
+    };
+  };
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -29,9 +36,9 @@
 #      enable = false;
 #      finegrained = false;
 #    };
-#    nvidiaSettings = true;
+    nvidiaSettings = true;
 #    nvidiaPersistenced = true;
-#    modesetting.enable = true;
+    modesetting.enable = true;
 #    dynamicBoost.enable = true;
   };
 
@@ -67,6 +74,8 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
   };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Configure X11
   services.xserver = {
@@ -113,11 +122,13 @@
     #jack.enable = true;
   };
 
-  services.flatpak.enable = true;
+#  services.flatpak.enable = true;
   # services.openssh.enable = true;
 
   fonts.packages = with pkgs; [
+    adwaita-fonts
     font-awesome
+    maple-mono.NF
     nerd-fonts.caskaydia-mono
     nerd-fonts.caskaydia-cove
     nerd-fonts.iosevka
@@ -135,8 +146,6 @@
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     libva-utils
     vdpauinfo
@@ -157,26 +166,27 @@
     zsh
     nh
 
-#    blender
+    (graphite-gtk-theme.override {
+      sizeVariants = [ "compact" ];
+      tweaks = [ "black" "rimless" ];
+      withGrub = true;
+    })
+
+    bibata-cursors
     btop
+    discord
     eww
     fastfetch
     foot
     galculator
     gamemode
-#    gimp
     github-desktop
     gnome-keyring
-    gnome-themes-extra
-    gtk-engine-murrine
-    gtk-layer-shell
-#    hyprland
     hyprlock
     hyprshot
     hyprsunset
     imv
     jq
-    libdbusmenu
     libreoffice
     librewolf
     mako
@@ -188,12 +198,11 @@
     prismlauncher
     qbittorrent
     rofi-wayland
-    sassc
     signal-desktop
     starship
     swww
+    ungoogled-chromium
     wev
-#    xdg-desktop-portal-hyprland
     yazi
   ];
 
