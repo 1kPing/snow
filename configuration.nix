@@ -1,64 +1,185 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
-#  boot.loader.systemd-boot.enable = true;
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-    grub = {
+  nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = with pkgs; [
+    
+    alacritty
+    bibata-cursors
+    btop
+    discord
+    eww
+    fastfetch
+    foot
+    galculator
+    gamemode
+    github-desktop
+    hyprlock
+    hyprpaper
+    hyprshot
+    hyprsunset
+    imv
+    libreoffice
+    librewolf-wayland
+    mako
+    mangohud
+    mpv
+    mpvpaper
+    neovim
+    nvtopPackages.full
+    nwg-look
+    pavucontrol
+    pcmanfm
+    prismlauncher
+    qbittorrent
+    rofi-wayland
+    signal-desktop
+    starship
+    tmux
+    ungoogled-chromium
+    waypaper
+    wev
+    yazi
+    zsh
+				  
+    dash		          #─┬ needed
+    git			          # │
+    jq			          # │
+    killall		          # │
+    libnotify		          # │
+    nh			          # │
+    socat		          # │
+    unzip		          # │
+    uutils-coreutils-noprefix     # │
+    uutils-diffutils		  # │
+    uutils-findutils		  #─╯
+
+    egl-wayland			  #─┬ driver related
+    libGL                         # │
+    libglvnd                      # │
+    libva-utils                   # │
+    libvdpau-va-gl                # │
+    mesa                          # │
+    vdpauinfo                     # │
+    vulkan-tools                  # │
+    vulkan-validation-layers      # │
+    wgpu-utils                    #─╯
+
+    (graphite-gtk-theme.override {
+      sizeVariants = [ "compact" ];
+      tweaks = [ "black" "rimless" ];
+      withGrub = true;
+    })
+  ];
+
+  fonts.packages = with pkgs; [
+    adwaita-fonts
+    font-awesome
+    maple-mono.NF
+    nerd-fonts.caskaydia-mono
+    nerd-fonts.caskaydia-cove
+    nerd-fonts.iosevka
+    nerd-fonts.jetbrains-mono
+  ];
+
+  programs.nano.enable = false;
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+#    configure = {
+#      customRC = ''
+#        set number
+#        set cc=80
+#        set list
+#        set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+#        if &diff
+#          colorscheme blue
+#        endif
+#      '';
+#      packages.myVimPackage = with pkgs.vimPlugins; {
+#        start = [ ctrlp ];
+#      };
+#    };
+  };
+
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  programs.steam = {
+    enable = true;
+#    remotePlay.openFirewall = true;
+#    dedicatedServer.openFirewall = true;
+  };
+
+  xdg = {
+    autostart.enable = true;
+    portal = {
       enable = true;
-      devices = [ "nodev" ];
-      efiSupport = true;
-      useOSProber = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-wlr
+      ];
     };
   };
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" "glaxnimate" ];
-  boot.blacklistedKernelModules=["nouveau"];
+#  services.gnome.gnome-keyring.enable = true;
 
-  # nvidia.
-  hardware.graphics.enable = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia = {
-    open = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-#    powerManagement = {
-#      enable = false;
-#      finegrained = false;
-#    };
-    nvidiaSettings = true;
-#    nvidiaPersistenced = true;
-    modesetting.enable = true;
-#    dynamicBoost.enable = true;
+#  services.printing.enable = true;
+#  services.avahi = {
+#    enable = true;
+#    nssmdns4 = true;
+#    openFirewall = true;
+#  };
+
+  services.displayManager.ly.enable = true;
+
+  services.xserver = {
+#    enable = true;
+    xkb.layout = "us";
+    xkb.variant = "";
   };
 
-  # hostname.
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+#  services.getty.autologinUser = "j";
 
-  # Enable networking
+  systemd.services."systemd-run".serviceConfig.ExecStart = "/bin/true";  # Disable systemd-run
+
+  security.sudo.enable = false;
+#  security.sudo-rs.enable = true;
+#  programs.doas-sudo-shim.enable = true;
+#  security.doas.enable = true;
+#  security.doas.extraRules = [{
+#    groups = ["wheel"];
+#    keepEnv = true;  # Optional, retains environment variables while running commands 
+#                     # e.g. retains your NIX_PATH when applying your config
+#    persist = true;  # Optional, only require password verification a single time
+#  }];
+
+  security.rtkit.enable = true;
+
+  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-
-  # Set your time zone.
+#  networking.wireless.enable = true;
   time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -73,31 +194,11 @@
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    QT_QPA_PLATFORMTHEME = "gtk3";
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  environment.variables.EDITOR = "nvim";
 
-  # Configure X11
-  services.xserver = {
-#    enable = true;
-    xkb.layout = "us";
-    xkb.variant = "";
-  };
-
-  # XDG Portals
-  xdg = {
-    autostart.enable = true;
-    portal = {
-      enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.xdg-desktop-portal-wlr
-      ];
-    };
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.j = {
     isNormalUser = true;
     description = "j";
@@ -105,127 +206,38 @@
     packages = with pkgs; [];
   };
 
-  # Enable automatic login for the user.
-  services.getty.autologinUser = "j";
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # rtkit (optional, recommended) allows Pipewire to use the realtime scheduler for increased performance.
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true; # if not already enabled
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment the following
-    #jack.enable = true;
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = true;
+#    grub = {
+#      enable = true;
+#      devices = [ "nodev" ];
+#      efiSupport = true;
+#      useOSProber = true;
+#    };
   };
 
-#  services.flatpak.enable = true;
-  # services.openssh.enable = true;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+#  boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" "glaxnimate" ];
+  boot.blacklistedKernelModules=["nouveau"];
 
-  fonts.packages = with pkgs; [
-    adwaita-fonts
-    font-awesome
-    maple-mono.NF
-    nerd-fonts.caskaydia-mono
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.iosevka
-    nerd-fonts.jetbrains-mono
-];
-
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;  # or can pick beta
+#    powerManagement = {
+#      enable = false;
+#      finegrained = false;
+#    };
+    nvidiaSettings = true;
+#    nvidiaPersistenced = true;
+    modesetting.enable = true;
+#    dynamicBoost.enable = true;
   };
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  environment.systemPackages = with pkgs; [
-    libva-utils
-    vdpauinfo
-    vulkan-tools
-    vulkan-validation-layers
-    libvdpau-va-gl
-    egl-wayland
-    wgpu-utils
-    mesa
-    libglvnd
-    libGL
-
-    neovim
-    git
-    busybox
-    socat
-    dash
-    zsh
-    nh
-
-    (graphite-gtk-theme.override {
-      sizeVariants = [ "compact" ];
-      tweaks = [ "black" "rimless" ];
-      withGrub = true;
-    })
-
-    bibata-cursors
-    btop
-    discord
-    eww
-    fastfetch
-    foot
-    galculator
-    gamemode
-    github-desktop
-    gnome-keyring
-    hyprlock
-    hyprshot
-    hyprsunset
-    imv
-    jq
-    libreoffice
-    librewolf
-    mako
-    mangohud
-    mpv
-    nwg-look
-    pavucontrol
-    pcmanfm
-    prismlauncher
-    qbittorrent
-    rofi-wayland
-    signal-desktop
-    starship
-    swww
-    ungoogled-chromium
-    wev
-    yazi
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
-
+  system.stateVersion = "25.05";
 }
+
