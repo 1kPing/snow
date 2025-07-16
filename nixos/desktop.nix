@@ -1,7 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, ... }: {
 
-{
-  programs.nano.enable = false;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
 
   programs.neovim = {
     enable = true;
@@ -24,11 +26,6 @@
 #    };
   };
 
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
-
   programs.steam = {
     enable = true;
 #    remotePlay.openFirewall = true;
@@ -47,38 +44,5 @@
     };
   };
 
-#  services.gnome.gnome-keyring.enable = true;
-
-#  services.printing.enable = true;
-#  services.avahi = {
-#    enable = true;
-#    nssmdns4 = true;
-#    openFirewall = true;
-#  };
-
-  services.displayManager.ly.enable = true;
-
-  services.xserver = {
-#    enable = true;
-    xkb.layout = "us";
-    xkb.variant = "";
-  };
-
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  security.rtkit.enable = true;
-
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    QT_QPA_PLATFORMTHEME = "gtk3";
-  };
-
-  environment.variables.EDITOR = "nvim";
 }
 

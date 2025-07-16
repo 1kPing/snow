@@ -1,12 +1,14 @@
-{ config, pkgs, ... }:
+{ config, pkgs, ... }: {
 
-{
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
     alacritty
     bibata-cursors
     bottom
     btop
     discord
+    cmst
     eww
     fastfetch
     foot
@@ -39,7 +41,9 @@
     ungoogled-chromium
     waypaper
     wev
+    wget
     yazi
+    ydotool
     zsh
     dash		          #─┬ needed
     git			          # │
@@ -52,16 +56,17 @@
     uutils-coreutils-noprefix     # │
     uutils-diffutils		  # │
     uutils-findutils		  #─╯
-    egl-wayland			  #─┬ nvidia related
-    libGL                         # │
-    libglvnd                      # │
-    libva-utils                   # │
-    libvdpau-va-gl                # │
-    mesa                          # │
-    vdpauinfo                     # │
-    vulkan-tools                  # │
-    vulkan-validation-layers      # │
-    wgpu-utils                    #─╯
+#    cuda                          #─┬ nvidia related
+#    egl-wayland                   # │
+#    libGL                         # │
+#    libglvnd                      # │
+#    libva-utils                   # │
+#    libvdpau-va-gl                # │
+#    mesa                          # │
+#    vdpauinfo                     # │
+#    vulkan-tools                  # │
+#    vulkan-validation-layers      # │
+#    wgpu-utils                    #─╯
     (graphite-gtk-theme.override {
       sizeVariants = [ "compact" ];
       tweaks = [ "black" "rimless" ];
@@ -78,5 +83,8 @@
     nerd-fonts.iosevka
     nerd-fonts.jetbrains-mono
   ];
+
+  programs.nano.enable = false;
+
 }
 
