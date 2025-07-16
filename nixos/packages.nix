@@ -21,7 +21,7 @@
     hyprsunset
     imv
     libreoffice
-    librewolf-wayland
+    librewolf
     mako
     mangohud
     mpv
@@ -29,11 +29,12 @@
     neovim
     nvtopPackages.full
     nwg-look
+    openrgb-with-all-plugins
     pavucontrol
     pcmanfm
     prismlauncher
     qbittorrent
-    rofi-wayland
+    rofi
     signal-desktop
     skim
     starship

@@ -6,6 +6,15 @@
  
   hardware.graphics.enable = true;
 
+  services = {                           ##############################################
+    xserver.videoDrivers = [ "nvidia" ]; #### <-- SWITCH OUT FOR WHAT YOU NEED <-- ####
+#    ollama.acceleration = "cuda";       #### <--<--<--<--<--<--<--<--<--<--<--<-- ####
+  };                                     ##############################################
+
+####################################################
+#### COMMENT OUT WHAT YOU DON'T NEED FROM BELOW ####
+####################################################
+
 ###########
 # AMD GPU
 
@@ -43,17 +52,12 @@
 #    };
   };
 
-  services = {
-    xserver.videoDrivers = [ "nvidia" ];
-    ollama.acceleration = "cuda";
-  };
-
-  nixpkgs.config.allowUnfreePredicate = with pkgs; [
-    "cuda_cccl"
-    "cuda_cudart"
-    "cuda_nvcc"
-    "libcublas"
-  ];
+#  nixpkgs.config.allowUnfreePredicate = with pkgs; [
+#    "cuda_cccl"
+#    "cuda_cudart"
+#    "cuda_nvcc"
+#    "libcublas"
+#  ];
              #
 ##############
 

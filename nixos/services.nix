@@ -11,14 +11,14 @@
 #      openFirewall = true;
 #    };
 
-    ollama = {
-      enable = true;
-    };
+#    ollama = {
+#      enable = true;
+#    };
 
-    open-webui = {
-      enable = true;
-#      port = 8080;
-    };
+#    open-webui = {
+#      enable = true;
+##      port = 8080;
+#    };
 
     displayManager = {
       ly = {
@@ -38,6 +38,12 @@
       alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
+    };
+
+    hardware = {
+      openrgb = {
+        enable = true;
+      };
     };
   }; 
 

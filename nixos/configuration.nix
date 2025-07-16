@@ -8,6 +8,7 @@
     ./users.nix
     ./desktop.nix
     ./packages.nix
+    ./overlays.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
